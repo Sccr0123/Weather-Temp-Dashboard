@@ -29,7 +29,7 @@ function generatePage(city) {
 
 function getLatLong(city) {
 	fetch(
-		`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIKey}`
+		`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIKey}`
 	)
 		.then(function (response) {
 			return response.json();
@@ -44,7 +44,7 @@ function getLatLong(city) {
 
 function getWeather(lat, long, city) {
 	fetch(
-		`http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${APIKey}&units=imperial`
+		`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${APIKey}&units=imperial`
 	)
 		.then(function (response) {
 			return response.json();
