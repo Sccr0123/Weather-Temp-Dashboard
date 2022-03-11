@@ -44,3 +44,8 @@ header h1 {
 #FiveDayInner{
     height: 30vh;
 }
+
+#SearchHistory{
+    margin-top: 5vh;
+    flex: 0 0 30vh;
+}
