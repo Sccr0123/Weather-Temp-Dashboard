@@ -1,7 +1,7 @@
-dayjs.extend(window.dayjs_plugin_utc);
-dayjs.extend(window.dayjs_plugin_timezone);
+// dayjs.extend(window.dayjs_plugin_utc);
+// dayjs.extend(window.dayjs_plugin_timezone);
 
-const APIKey = "0ff69f3d13585fb83dee9d3379f0e553";
+import { APIKey } from "../javascript/key";
 var cityName = "Detroit";
 
 function generatePage() {
@@ -25,6 +25,7 @@ function getLatLong(city) {
 			return response.json();
 		})
 		.then(function (data) {
+			console.log(data);
 			var long = data[0].lon;
 			var lat = data[0].lat;
 
@@ -74,10 +75,10 @@ function printFiveDay(daily) {
 		dayWind = document.createElement("p");
 		dayHum = document.createElement("p");
 
-		dayDate.textContent = "Date";
-		dayTemp.textContent = daily[i].temp.max;
-		dayWind.textContent = daily[i].wind_speed;
-		dayHum.textContent = daily[i].humidity;
+		dayDate.textContent = "Placeholder";
+		dayTemp.textContent = `Tempature: ${daily[i].temp.max}°`;
+		dayWind.textContent = `Wind Speed: ${daily[i].wind_speed} mph`;
+		dayHum.textContent = `Humidity: ${daily[i].humidity}`;
 
 		dayE1.append(dayDate);
 		dayE1.append(dayIcon);
@@ -91,4 +92,8 @@ function printFiveDay(daily) {
 
 $(document).ready(function () {
 	generatePage();
+});
+
+$("#Search").click(function () {
+	
 });
