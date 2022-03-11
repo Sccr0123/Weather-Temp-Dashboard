@@ -5,23 +5,22 @@ var APIKey = "0ff69f3d13585fb83dee9d3379f0e553";
 // dayjs.extend(window.dayjs_plugin_utc);
 // dayjs.extend(window.dayjs_plugin_timezone);
 
+var fiveDayEl = $("#FiveDay");
+var fiveDayInnerEl = $("#FiveDayInner");
+var currentDayEl = $("#CurrentDay");
+
 function clearPage() {
 	$("#curDay").empty();
 	$("#curTemp").empty();
 	$("#curHum").empty();
 	$("#curWS").empty();
 	$("#curUV").empty();
-	$("#FiveDayInner").empty();
+	fiveDayInnerEl.empty();
 }
 
 function generatePage(city) {
-	var curIconE1 = "";
-	var curTempE1 = $("#curTemp");
-	var curHumE1 = "";
-	var curWindSpeedE1 = "";
-	var curUvIndE1 = "";
-	var searchHisE1 = "";
-	var curDayE1 = "";
+	$("#curDay").html(`<h3>Searching...</h3>`);
+
 	var history = "";
 
 	getLatLong(city);
@@ -59,6 +58,10 @@ function printCurrent(current, city, timezone) {
 	var date = new Date(current.dt * 1000).toUTCString();
 	console.log(timezone);
 	// var date = dayjs().tz(timezone).format("M/D/YYYY");
+	currentDayEl.addClass("border border-dark");
+
+	// var curDay = $("<h2></h2>");
+	// curDay.attr("id", "curDay");
 
 	$("#curDay").html(`${city} (${date})`);
 	$("#curTemp").append(`Tempature: ${parseInt(current.temp)}°`);
@@ -69,12 +72,12 @@ function printCurrent(current, city, timezone) {
 
 function printFiveDay(daily) {
 	var days = [daily[1], daily[2], daily[3], daily[4], daily[5]];
-	var fiveDayE1 = $("#FiveDayInner");
-	$("#FiveDayInner");
+
+	fiveDayEl.addClass("border border-dark");
 
 	for (var i = 0; i < days.length; i++) {
-		var dayE1 = $("<div>");
-		dayE1.addClass("col-2 border border-dark");
+		var dayEl = $("<div>");
+		dayEl.addClass("col-2 border border-dark");
 
 		dayDate = document.createElement("h2");
 		dayIcon = document.createElement("img");
@@ -87,13 +90,13 @@ function printFiveDay(daily) {
 		dayWind.textContent = `Wind Speed: ${daily[i].wind_speed} mph`;
 		dayHum.textContent = `Humidity: ${daily[i].humidity}`;
 
-		dayE1.append(dayDate);
-		dayE1.append(dayIcon);
-		dayE1.append(dayTemp);
-		dayE1.append(dayWind);
-		dayE1.append(dayHum);
+		dayEl.append(dayDate);
+		dayEl.append(dayIcon);
+		dayEl.append(dayTemp);
+		dayEl.append(dayWind);
+		dayEl.append(dayHum);
 
-		fiveDayE1.append(dayE1);
+		fiveDayInnerEl.append(dayEl);
 	}
 }
 
