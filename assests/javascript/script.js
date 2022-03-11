@@ -1,10 +1,20 @@
+// import { APIKey } from "./key";
+
+var APIKey = "0ff69f3d13585fb83dee9d3379f0e553";
+
 // dayjs.extend(window.dayjs_plugin_utc);
 // dayjs.extend(window.dayjs_plugin_timezone);
 
-import { APIKey } from "../javascript/key";
-var cityName = "Detroit";
+function clearPage() {
+	$("#curDay").empty();
+	$("#curTemp").empty();
+	$("#curHum").empty();
+	$("#curWS").empty();
+	$("#curUV").empty();
+	$("#FiveDayInner").empty();
+}
 
-function generatePage() {
+function generatePage(city) {
 	var curIconE1 = "";
 	var curTempE1 = $("#curTemp");
 	var curHumE1 = "";
@@ -14,7 +24,7 @@ function generatePage() {
 	var curDayE1 = "";
 	var history = "";
 
-	getLatLong(cityName);
+	getLatLong(city);
 }
 
 function getLatLong(city) {
@@ -25,15 +35,14 @@ function getLatLong(city) {
 			return response.json();
 		})
 		.then(function (data) {
-			console.log(data);
 			var long = data[0].lon;
 			var lat = data[0].lat;
 
-			getWeather(lat, long);
+			getWeather(lat, long, city);
 		});
 }
 
-function getWeather(lat, long) {
+function getWeather(lat, long, city) {
 	fetch(
 		`http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${APIKey}&units=imperial`
 	)
@@ -41,9 +50,7 @@ function getWeather(lat, long) {
 			return response.json();
 		})
 		.then(function (data) {
-			console.log(data);
-
-			printCurrent(data.current, cityName, data.timezone);
+			printCurrent(data.current, city, data.timezone);
 			printFiveDay(data.daily);
 		});
 }
@@ -52,18 +59,18 @@ function printCurrent(current, city, timezone) {
 	var date = new Date(current.dt * 1000).toUTCString();
 	console.log(timezone);
 	// var date = dayjs().tz(timezone).format("M/D/YYYY");
-	
 
 	$("#curDay").html(`${city} (${date})`);
-	$("#curTemp").append(`${parseInt(current.temp)}°`);
-	$("#curHum").append(current.humidity);
-	$("#curWS").append(`${current.wind_speed} mph`);
-	$("#curUV").append(current.uvi);
+	$("#curTemp").append(`Tempature: ${parseInt(current.temp)}°`);
+	$("#curWS").append(`Wind Speed: ${current.wind_speed} mph`);
+	$("#curHum").append(`Humidity: ${current.humidity}%`);
+	$("#curUV").append(`UV Index: ${current.uvi}`);
 }
 
 function printFiveDay(daily) {
 	var days = [daily[1], daily[2], daily[3], daily[4], daily[5]];
 	var fiveDayE1 = $("#FiveDayInner");
+	$("#FiveDayInner");
 
 	for (var i = 0; i < days.length; i++) {
 		var dayE1 = $("<div>");
@@ -91,9 +98,9 @@ function printFiveDay(daily) {
 }
 
 $(document).ready(function () {
-	generatePage();
-});
-
-$("#Search").click(function () {
-	
+	$("#searchBtn").on("click", function () {
+		clearPage();
+		var cityName = $("#searchText").val();
+		generatePage(cityName);
+	});
 });
