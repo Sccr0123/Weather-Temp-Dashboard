@@ -46,15 +46,28 @@ function getWeather(lat, long, city) {
 			return response.json();
 		})
 		.then(function (data) {
-			
 			printCurrent(data.current, city, data.timezone);
 			printFiveDay(data.daily);
 		});
-};
+}
 
 function loadHistory() {
-	curHistory = localStorage.getItem("history");
-};
+	var searchHistory = $("#SearchHistory");
+
+	curHistory = JSON.parse(localStorage.getItem("history"));
+	console.log(curHistory);
+
+	for (var i = 0; i < curHistory.length; i++) {
+		var tempHistEl = $("<p>");
+		var tempHistBtn = $("<button>");
+
+		tempHistBtn.attr("class", "pt-3 border-0 bg-white");
+		tempHistBtn.text(curHistory[i]);
+
+		tempHistEl.append(tempHistBtn);
+		searchHistory.append(tempHistEl);
+	}
+}
 
 function saveHistory() {
 	var tempHist = $("#searchText").val();
@@ -63,15 +76,15 @@ function saveHistory() {
 	curHistory.unshift(tempHist);
 	if (curHistory.length > 8) {
 		curHistory = curHistory.slice(0, 7);
-	};
-	localStorage.setItem("history", curHistory);
-};
+	}
+	localStorage.setItem("history", JSON.stringify(curHistory));
+}
 
 function printCurrent(current, city, timezone) {
 	var curDayEl = $("#CurrentDay");
 
 	var tempIcon = current.weather[0].icon;
-	var curDayIcon = `http://openweathermap.org/img/wn/${tempIcon}@2x.png`
+	var curDayIcon = `http://openweathermap.org/img/wn/${tempIcon}@2x.png`;
 
 	var date = new Date(current.dt * 1000);
 	console.log(timezone);
@@ -98,7 +111,7 @@ function printCurrent(current, city, timezone) {
 	curHum.attr("id", "curHum");
 	var curUV = $("<p>");
 	curUV.attr("id", "curUV");
-	
+
 	curDayDiv.append(curTemp);
 	curDayDiv.append(curWS);
 	curDayDiv.append(curHum);
