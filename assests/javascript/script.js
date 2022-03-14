@@ -1,19 +1,6 @@
-// import { APIKey } from "./key";
 var APIKey = "0ff69f3d13585fb83dee9d3379f0e553";
 
 var curHistory = [];
-
-// dayjs.extend(window.dayjs_plugin_utc);
-// dayjs.extend(window.dayjs_plugin_timezone);
-
-function clearPage() {
-	$("#curDay").empty();
-	$("#curTemp").empty();
-	$("#curHum").empty();
-	$("#curWS").empty();
-	$("#curUV").empty();
-	fiveDayInnerEl.empty();
-}
 
 function generatePage(city) {
 	$("#curDay").html(`<h3>Searching...</h3>`);
@@ -46,22 +33,22 @@ function getWeather(lat, long, city) {
 			return response.json();
 		})
 		.then(function (data) {
-			printCurrent(data.current, city, data.timezone);
+			printCurrent(data.current, city);
 			printFiveDay(data.daily);
 		});
 }
 
 function loadHistory() {
 	var searchHistory = $("#SearchHistory");
+	searchHistory.empty();
 
 	curHistory = JSON.parse(localStorage.getItem("history"));
-	console.log(curHistory);
 
 	for (var i = 0; i < curHistory.length; i++) {
 		var tempHistEl = $("<p>");
 		var tempHistBtn = $("<button>");
 
-		tempHistBtn.attr("class", "pt-3 border-0 bg-white");
+		tempHistBtn.attr("class", "pt-3 border-0 bg-white SearchHistoryBtn");
 		tempHistBtn.text(curHistory[i]);
 
 		tempHistEl.append(tempHistBtn);
@@ -69,27 +56,28 @@ function loadHistory() {
 	}
 }
 
-function saveHistory() {
-	var tempHist = $("#searchText").val();
-	console.log(tempHist);
-	console.log(curHistory);
-	curHistory.unshift(tempHist);
+function saveHistory(city) {
+	curHistory.unshift(city);
 	if (curHistory.length > 8) {
-		curHistory = curHistory.slice(0, 7);
+		curHistory = curHistory.slice(0, 8);
 	}
 	localStorage.setItem("history", JSON.stringify(curHistory));
+
+	loadHistory();
 }
 
-function printCurrent(current, city, timezone) {
+function printCurrent(current, city) {
 	var curDayEl = $("#CurrentDay");
+
+	curDayEl.empty();
 
 	var tempIcon = current.weather[0].icon;
 	var curDayIcon = `http://openweathermap.org/img/wn/${tempIcon}@2x.png`;
 
 	var date = new Date(current.dt * 1000);
-	console.log(timezone);
 
-	// var date = dayjs().tz(timezone).format("M/D/YYYY");
+	date = dayjs(date).format("dddd, MMMM DD");
+
 	curDayEl.addClass("border border-dark");
 
 	var curDayH2 = $("<h2>");
@@ -120,20 +108,23 @@ function printCurrent(current, city, timezone) {
 	curDayEl.append(curDayH2);
 	curDayEl.append(curDayDiv);
 
-	//
 	$("#curDay").html(`${city} (${date})`);
 	$("#curDay").append(curDayIc);
 	$("#curTemp").append(`Tempature: ${parseInt(current.temp)}°`);
 	$("#curWS").append(`Wind Speed: ${current.wind_speed} mph`);
 	$("#curHum").append(`Humidity: ${current.humidity}%`);
 	$("#curUV").append(`UV Index: ${current.uvi}`);
+
 }
 
 function printFiveDay(daily) {
+	ran = true;
 	var fiveDayEl = $("#FiveDay");
+	fiveDayEl.empty();
+
 	var days = [daily[1], daily[2], daily[3], daily[4], daily[5]];
 
-	fiveDayEl.addClass("border border-dark");
+	//fiveDayEl.addClass("border border-dark");
 
 	var fiveDayH3 = $("<h3>");
 	var fiveDayDiv = $("<div>");
@@ -145,7 +136,8 @@ function printFiveDay(daily) {
 
 	for (var i = 0; i < days.length; i++) {
 		var date = new Date(days[i].dt * 1000);
-		console.log(date);
+		date = dayjs(date).format("dddd, MMMM DD");
+
 		var dayEl = $("<div>");
 		var tempIcon = daily[i].weather[0].icon;
 		var fiveDayIcon = `http://openweathermap.org/img/wn/${tempIcon}@2x.png`;
@@ -158,9 +150,10 @@ function printFiveDay(daily) {
 		dayWind = $("<p>");
 		dayHum = $("<p>");
 
-		dayDate.text("Placeholder");
+		dayDate.text(date);
 		dayIcon.attr("src", fiveDayIcon);
 		dayIcon.attr("alt", "Weather Icon Placeholder");
+		dayIcon.attr("class", "pt-1");
 		dayTemp.text(`Tempature: ${daily[i].temp.max}°`);
 		dayWind.text(`Wind Speed: ${daily[i].wind_speed} mph`);
 		dayHum.text(`Humidity: ${daily[i].humidity}`);
@@ -180,10 +173,24 @@ function printFiveDay(daily) {
 
 $(document).ready(function () {
 	loadHistory();
+
 	$("#searchBtn").on("click", function () {
-		//clearPage();
-		saveHistory();
 		var cityName = $("#searchText").val();
+
+		console.log("Clicked");
+		console.log(cityName);
+
+		saveHistory(cityName);
+		generatePage(cityName);
+	});
+
+	$(".SearchHistoryBtn").on("click", function () {
+		var cityName = $(this).text();
+		
+		console.log("Clicked");
+		console.log(cityName);
+
+		saveHistory(cityName);
 		generatePage(cityName);
 	});
 });
