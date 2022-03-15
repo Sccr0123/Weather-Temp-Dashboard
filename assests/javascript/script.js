@@ -114,7 +114,6 @@ function printCurrent(current, city) {
 	$("#curWS").append(`Wind Speed: ${current.wind_speed} mph`);
 	$("#curHum").append(`Humidity: ${current.humidity}%`);
 	$("#curUV").append(`UV Index: ${current.uvi}`);
-
 }
 
 function printFiveDay(daily) {
@@ -177,18 +176,13 @@ $(document).ready(function () {
 	$("#searchBtn").on("click", function () {
 		var cityName = $("#searchText").val();
 
-		console.log("Clicked");
-		console.log(cityName);
-
 		saveHistory(cityName);
 		generatePage(cityName);
 	});
 
 	$(".SearchHistoryBtn").on("click", function () {
 		var cityName = $(this).text();
-		
 		console.log("Clicked");
-		console.log(cityName);
 
 		saveHistory(cityName);
 		generatePage(cityName);
