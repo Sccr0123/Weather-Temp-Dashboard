@@ -48,19 +48,19 @@ function loadHistory() {
 		var tempHistEl = $("<p>");
 		var tempHistBtn = $("<button>");
 
-		tempHistBtn.attr("class", "pt-3 border-0 bg-white SearchHistoryBtn");
+		tempHistBtn.attr("class", "pt-2 border-0 bg-white SearchHistoryBtn");
 		tempHistBtn.text(curHistory[i]);
 
 		tempHistEl.append(tempHistBtn);
 		searchHistory.append(tempHistEl);
-	}
-}
+	};
+};
 
 function saveHistory(city) {
 	curHistory.unshift(city);
 	if (curHistory.length > 8) {
 		curHistory = curHistory.slice(0, 8);
-	}
+	};
 	localStorage.setItem("history", JSON.stringify(curHistory));
 
 	loadHistory();
@@ -123,8 +123,6 @@ function printFiveDay(daily) {
 
 	var days = [daily[1], daily[2], daily[3], daily[4], daily[5]];
 
-	//fiveDayEl.addClass("border border-dark");
-
 	var fiveDayH3 = $("<h3>");
 	var fiveDayDiv = $("<div>");
 
@@ -175,6 +173,7 @@ $(document).ready(function () {
 
 	$("#searchBtn").on("click", function () {
 		var cityName = $("#searchText").val();
+		console.log("Searched");
 
 		saveHistory(cityName);
 		generatePage(cityName);
@@ -184,7 +183,6 @@ $(document).ready(function () {
 		var cityName = $(this).text();
 		console.log("Clicked");
 
-		saveHistory(cityName);
 		generatePage(cityName);
 	});
 });
