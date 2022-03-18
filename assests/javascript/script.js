@@ -8,7 +8,7 @@ function generatePage(city) {
 	var history = "";
 
 	getLatLong(city);
-}
+};
 
 function getLatLong(city) {
 	fetch(
@@ -23,7 +23,7 @@ function getLatLong(city) {
 
 			getWeather(lat, long, city);
 		});
-}
+};
 
 function getWeather(lat, long, city) {
 	fetch(
@@ -36,7 +36,7 @@ function getWeather(lat, long, city) {
 			printCurrent(data.current, city);
 			printFiveDay(data.daily);
 		});
-}
+};
 
 function loadHistory() {
 	var searchHistory = $("#SearchHistory");
@@ -44,27 +44,32 @@ function loadHistory() {
 
 	curHistory = JSON.parse(localStorage.getItem("history"));
 
-	for (var i = 0; i < curHistory.length; i++) {
-		var tempHistEl = $("<p>");
-		var tempHistBtn = $("<button>");
+	if (curHistory != null) {
+		for (var i = 0; i < curHistory.length; i++) {
+			var tempHistEl = $("<p>");
+			var tempHistBtn = $("<button>");
 
-		tempHistBtn.attr("class", "pt-2 border-0 bg-white SearchHistoryBtn");
-		tempHistBtn.text(curHistory[i]);
+			tempHistBtn.attr("class", "pt-2 border-0 bg-white SearchHistoryBtn");
+			tempHistBtn.text(curHistory[i]);
 
-		tempHistEl.append(tempHistBtn);
-		searchHistory.append(tempHistEl);
+			tempHistEl.append(tempHistBtn);
+			searchHistory.append(tempHistEl);
+		};
 	};
 };
 
 function saveHistory(city) {
 	curHistory.unshift(city);
+
 	if (curHistory.length > 8) {
 		curHistory = curHistory.slice(0, 8);
+		
 	};
+
 	localStorage.setItem("history", JSON.stringify(curHistory));
 
 	loadHistory();
-}
+};
 
 function printCurrent(current, city) {
 	var curDayEl = $("#CurrentDay");
@@ -114,7 +119,7 @@ function printCurrent(current, city) {
 	$("#curWS").append(`Wind Speed: ${current.wind_speed} mph`);
 	$("#curHum").append(`Humidity: ${current.humidity}%`);
 	$("#curUV").append(`UV Index: ${current.uvi}`);
-}
+};
 
 function printFiveDay(daily) {
 	ran = true;
@@ -162,11 +167,11 @@ function printFiveDay(daily) {
 		dayEl.append(dayHum);
 
 		fiveDayDiv.append(dayEl);
-	}
+	};
 
 	fiveDayEl.append(fiveDayH3);
 	fiveDayEl.append(fiveDayDiv);
-}
+};
 
 $(document).ready(function () {
 	loadHistory();
