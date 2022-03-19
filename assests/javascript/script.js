@@ -57,14 +57,20 @@ function loadHistory() {
 
 			tempHistEl.append(tempHistBtn);
 			searchHistory.append(tempHistEl);
-		}
-	}
+		};
+	};
+
+	$(".SearchHistoryBtn").on("click", function () {
+		var cityName = $(this).text();
+		console.log("History Button Clicked");
+		generatePage(cityName);
+	});
 }
 
 function saveHistory(city) {
 	if (curHistory === null) {
 		curHistory = [];
-	};
+	}
 
 	curHistory.unshift(city);
 
@@ -184,14 +190,8 @@ $(document).ready(function () {
 
 	$("#searchBtn").on("click", function () {
 		var cityName = $("#searchText").val();
-
+		console.log("Search Button Clicked");
 		saveHistory(cityName);
-		generatePage(cityName);
-	});
-
-	$(".SearchHistoryBtn").on("click", function () {
-		var cityName = $(this).text();
-
 		generatePage(cityName);
 	});
 });
